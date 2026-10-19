@@ -11,447 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <style>
-    :root {
-      --acp-white: #ffffff;
-      --acp-panel: #1a1a1a;
-      --acp-amber: #f7b90f;
-      --acp-cocoa: #2a1a07;
-      --acp-cream: #fff6dc;
-      --acp-radius: 28px;
-
-      --bs-body-bg: var(--acp-white);
-      --bs-body-color: #f3f0e8;
-      --bs-body-font-family: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-    }
-
-    [id] {
-      scroll-margin-top: 6rem;
-    }
-
-    a:focus-visible,
-    button:focus-visible,
-    .btn:focus-visible {
-      outline: 3px solid var(--acp-amber);
-      outline-offset: 3px;
-    }
-
-    .acp-header {
-      position: sticky;
-      top: 0;
-      z-index: 1030;
-      padding: 1rem 0 .5rem;
-      background: linear-gradient(var(--acp-white) 70%, transparent);
-    }
-
-    .acp-navbar {
-      background: var(--acp-panel);
-      border-radius: 999px;
-      padding: .5rem .6rem .5rem 1.1rem;
-      gap: .75rem;
-    }
-
-    .acp-brand {
-      display: inline-flex;
-      align-items: center;
-      gap: .6rem;
-      font-weight: 600;
-      letter-spacing: -.01em;
-      color: #fff;
-      text-decoration: none;
-    }
-
-    .acp-brand svg {
-      width: 28px;
-      height: 28px;
-      color: var(--acp-amber);
-    }
-
-    .acp-brand {
-      flex: 0 1 auto;
-      min-width: 0;
-    }
-
-    .acp-brand img {
-      display: block;
-      width: min(190px, 38vw);
-      max-height: 48px;
-      height: auto;
-      object-fit: contain;
-    }
-
-    .acp-navbar .nav-link {
-      color: #cfcac0;
-      font-size: .92rem;
-      font-weight: 500;
-      padding: .45rem 1rem;
-      border-radius: 999px;
-    }
-
-    .acp-navbar .nav-link:hover {
-      color: #fff;
-    }
-
-    .acp-navbar .nav-link.active {
-      color: var(--acp-cocoa);
-      background: var(--acp-amber);
-    }
-
-    @media (max-width: 767.98px) {
-      .acp-navbar {
-        border-radius: 28px;
-      }
-
-      .acp-navbar .nav-link {
-        display: inline-block;
-      }
-    }
-
-    @media (max-width: 575.98px) {
-      .acp-navbar {
-        justify-content: center;
-      }
-    }
-
-    .btn-amber {
-      --bs-btn-color: var(--acp-cocoa);
-      --bs-btn-bg: var(--acp-amber);
-      --bs-btn-border-color: var(--acp-amber);
-      --bs-btn-hover-color: var(--acp-cocoa);
-      --bs-btn-hover-bg: #ffc933;
-      --bs-btn-hover-border-color: #ffc933;
-      --bs-btn-active-color: var(--acp-cocoa);
-      --bs-btn-active-bg: #e0a500;
-      --bs-btn-active-border-color: #e0a500;
-      font-weight: 600;
-      border-radius: 999px;
-      padding: .7rem 1.6rem;
-    }
-
-    .btn-line {
-      --bs-btn-color: #f3f0e8;
-      --bs-btn-border-color: rgba(243, 240, 232, .35);
-      --bs-btn-hover-color: #fff;
-      --bs-btn-hover-bg: rgba(255, 255, 255, .08);
-      --bs-btn-hover-border-color: rgba(243, 240, 232, .7);
-      --bs-btn-active-color: #fff;
-      --bs-btn-active-bg: rgba(255, 255, 255, .14);
-      --bs-btn-active-border-color: rgba(243, 240, 232, .7);
-      font-weight: 500;
-      border-radius: 999px;
-      padding: .7rem 1.6rem;
-    }
-
-    .btn-cocoa {
-      --bs-btn-color: var(--acp-amber);
-      --bs-btn-bg: var(--acp-cocoa);
-      --bs-btn-border-color: var(--acp-cocoa);
-      --bs-btn-hover-color: #ffc933;
-      --bs-btn-hover-bg: #3a2509;
-      --bs-btn-hover-border-color: #3a2509;
-      --bs-btn-active-color: #ffc933;
-      --bs-btn-active-bg: #1c1105;
-      --bs-btn-active-border-color: #1c1105;
-      font-weight: 600;
-      border-radius: 999px;
-      padding: .7rem 1.6rem;
-    }
-
-    .tile {
-      border-radius: var(--acp-radius);
-      height: 100%;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .tile-pad {
-      padding: 2rem;
-    }
-
-    .tile-amber {
-      background: var(--acp-amber);
-      color: var(--acp-cocoa);
-    }
-
-    .tile-cocoa {
-      background: var(--acp-cocoa);
-      color: var(--acp-cream);
-    }
-
-    .tile-panel {
-      background: var(--acp-panel);
-      color: #f3f0e8;
-    }
-
-    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-      main.container-xl > .row {
-        transition: filter 180ms ease;
-      }
-
-      main.container-xl > .row:hover {
-        filter: drop-shadow(0 7px 12px rgba(42, 26, 7, .12));
-      }
-
-      main.container-xl > .row > [class*="col-"] {
-        transition: transform 180ms ease;
-      }
-
-      main.container-xl > .row > [class*="col-"]:hover {
-        position: relative;
-        z-index: 1;
-        transform: translateY(-5px);
-      }
-    }
-
-    .tile-photo {
-      min-height: 300px;
-      background: var(--acp-cocoa);
-    }
-
-    .tile-photo img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .hero-photo {
-      min-height: 320px;
-    }
-
-    @media (min-width: 992px) {
-      .hero-photo {
-        min-height: 540px;
-      }
-    }
-
-    .hero-photo img {
-      object-position: 50% 60%;
-    }
-
-    .hero-title {
-      font-size: clamp(2.4rem, 4.4vw, 3.6rem);
-      font-weight: 700;
-      letter-spacing: -.03em;
-      line-height: 1.02;
-      margin: 0 0 1rem;
-    }
-
-    .hero-copy {
-      font-size: 1.05rem;
-      line-height: 1.6;
-      font-weight: 300;
-      opacity: .85;
-      max-width: 34ch;
-      margin: 0 0 1.75rem;
-    }
-
-    .hero-brand {
-      display: flex;
-      align-items: center;
-      gap: .75rem;
-      margin-bottom: auto;
-    }
-
-    .hero-brand svg {
-      width: 46px;
-      height: 46px;
-      color: var(--acp-amber);
-    }
-
-    .hero-brand strong {
-      display: block;
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: -.01em;
-      line-height: 1.1;
-    }
-
-    .hero-brand small {
-      font-weight: 300;
-      letter-spacing: .14em;
-      opacity: .8;
-      font-size: .8rem;
-    }
-
-    .hero-logo {
-      display: block;
-      width: 100%;
-      height: 100%;
-      min-height: 0;
-      object-fit: contain;
-    }
-
-    .tagline {
-      font-size: clamp(1.9rem, 3vw, 2.4rem);
-      font-weight: 700;
-      letter-spacing: -.03em;
-      line-height: 1;
-      margin: 0;
-    }
-
-    .step-img {
-      width: 100%;
-      height: 230px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .step-body {
-      padding: 1.75rem 2rem 2rem;
-    }
-
-    .step-chip {
-      display: inline-grid;
-      place-items: center;
-      width: 2.1rem;
-      height: 2.1rem;
-      flex: none;
-      border-radius: 50%;
-      font-weight: 600;
-      font-size: .95rem;
-      background: currentColor;
-    }
-
-    .step-chip span {
-      color: var(--chip-ink);
-    }
-
-    .tile-panel .step-chip {
-      --chip-ink: var(--acp-white);
-      color: var(--acp-amber);
-    }
-
-    .tile-amber .step-chip {
-      --chip-ink: var(--acp-amber);
-      color: var(--acp-cocoa);
-    }
-
-    .tile-cocoa .step-chip {
-      --chip-ink: var(--acp-cocoa);
-      color: var(--acp-amber);
-    }
-
-    .menu-title {
-      font-size: 1.45rem;
-      font-weight: 600;
-      letter-spacing: -.01em;
-      margin: 0;
-    }
-
-    .menu-list {
-      list-style: none;
-      padding: 0;
-      margin: 1.25rem 0 0;
-    }
-
-    .menu-list li {
-      font-size: 1.05rem;
-      padding: .75rem 0;
-      border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
-    }
-
-    .menu-list li:last-child {
-      padding-bottom: 0;
-    }
-
-    .note-badge {
-      display: inline-block;
-      font-size: .8rem;
-      font-weight: 500;
-      padding: .3rem .8rem;
-      border-radius: 999px;
-      background: var(--acp-amber);
-      color: var(--acp-cocoa);
-      margin-top: .9rem;
-    }
-
-    .cta-banner {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 2rem;
-      min-height: 320px;
-    }
-
-    .cta-banner h2 {
-      font-size: clamp(2rem, 3.6vw, 3rem);
-      font-weight: 700;
-      letter-spacing: -.03em;
-      line-height: 1.02;
-      margin: 0;
-      max-width: 14ch;
-    }
-
-    .cta-sig {
-      display: flex;
-      align-items: center;
-      gap: .75rem;
-      font-weight: 500;
-    }
-
-    .cta-sig svg {
-      width: 34px;
-      height: 34px;
-    }
-
-    .cta-contact {
-      display: grid;
-      gap: .4rem;
-      font-size: .95rem;
-    }
-
-    .cta-contact strong {
-      font-size: .82rem;
-      text-transform: uppercase;
-    }
-
-    .cta-social {
-      display: flex;
-      align-items: center;
-      gap: .75rem;
-    }
-
-    .cta-social-item {
-      display: inline-flex;
-      align-items: center;
-      gap: .4rem;
-      color: inherit;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .cta-social-item svg {
-      width: 24px;
-      height: 24px;
-      flex: none;
-    }
-
-    .cta-social-item:hover {
-      text-decoration: underline;
-    }
-
-    .closing-photo img {
-      object-position: 88% 72%;
-    }
-
-    footer {
-      color: #8d8a82;
-      font-size: .85rem;
-    }
-  </style>
+  <link rel="stylesheet" href="assets/styles.css">
 </head>
 
 <body>
@@ -477,7 +37,7 @@
     <div class="row g-3 mb-3">
       <div class="col-12 col-lg-7">
         <div class="tile tile-photo hero-photo">
-          <img src="img\pizza.jpg">
+          <img src="assets/img/pizza.jpg">
         </div>
       </div>
 
@@ -489,7 +49,7 @@
 
 
             </div>
-            <img class="hero-logo" src="img\llogo.jpg" alt="Crusty Pizza logo" loading="lazy">
+            <img class="hero-logo" src="assets/img/llogo.jpg" alt="Crusty Pizza logo" loading="lazy">
           </div>
 
           <div class="tile tile-amber tile-pad">
@@ -507,7 +67,7 @@
     <div class="row g-3 mb-3">
       <div class="col-12 col-md-6 col-lg-4" id="base">
         <section class="tile tile-panel" aria-labelledby="base-title">
-          <img class="step-img" src="img\Base.jpg" alt="Golden hand-tossed pizza crust" loading="lazy"
+          <img class="step-img" src="assets/img/Base.jpg" alt="Golden hand-tossed pizza crust" loading="lazy"
             style="object-position: 50% 40%;">
           <div class="step-body">
             <div class="d-flex align-items-center gap-3">
@@ -527,7 +87,7 @@
 
       <div class="col-12 col-md-6 col-lg-4" id="sauce">
         <section class="tile tile-amber" aria-labelledby="sauce-title">
-          <img class="step-img" src="img\sauce.jpg" alt="Close-up of tomato sauce, pepperoni and fresh basil"
+          <img class="step-img" src="assets/img/sauce.jpg" alt="Close-up of tomato sauce, pepperoni and fresh basil"
             loading="lazy">
           <div class="step-body">
             <div class="d-flex align-items-center gap-3">
@@ -547,7 +107,7 @@
 
       <div class="col-12 col-lg-4" id="toppings">
         <section class="tile tile-cocoa" aria-labelledby="toppings-title">
-          <img class="step-img" src="img/Toppings.jpg"
+          <img class="step-img" src="assets/img/Toppings.jpg"
             alt="Close-up of mozzarella, peppers, courgette and basil toppings" loading="lazy">
           <div class="step-body">
             <div class="d-flex align-items-center gap-3">
@@ -603,7 +163,7 @@
       </div>
       <div class="col-12 col-lg-5">
         <div class="tile tile-photo closing-photo" style="min-height: 280px;">
-          <img src="img\Slices.jpg" alt="Whole pizza on a wooden board beside an Artisan Crust Pizza card"
+          <img src="assets/img/Slices.jpg" alt="Whole pizza on a wooden board beside an Artisan Crust Pizza card"
             loading="lazy">
         </div>
       </div>
