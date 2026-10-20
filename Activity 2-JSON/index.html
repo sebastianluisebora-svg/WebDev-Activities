@@ -3,68 +3,154 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Authentic Filipino recipes with ingredients and step-by-step instructions." />
-    <title>Lutong Bahay</title>
+    <meta name="description" content="Explore home-cooked Filipino recipes, ingredients, and simple cooking instructions." />
+    <title>Explore Recipes | Lutong Bahay</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg site-nav">
-      <div class="container">
-        <a class="navbar-brand" href="#top"><span class="brand-mark">LB</span><span>Lutong Bahay</span></a>
-        <span class="navbar-text" id="recipeCount" aria-live="polite"></span>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a class="brand" href="#top" aria-label="Lutong Bahay home">
+        <span class="brand-mark">LB</span>
+        <span class="brand-name">Lutong Bahay<small>Recipes from home</small></span>
+      </a>
+      <div class="nav-search" aria-label="Recipe search is unavailable on this static page">
+        <span aria-hidden="true">⌕</span> Search recipes
       </div>
+      <div class="nav-links"><span>OUR KITCHEN</span><span class="login-link">FILIPINO RECIPES</span></div>
     </nav>
 
     <header class="hero" id="top">
-      <div class="container hero-inner">
-        <div class="hero-copy">
-          <p class="eyebrow">A Filipino recipe journal</p>
-          <h1>Good food.<br /><em>Made at home.</em></h1>
-          <p class="lead">Comforting Filipino favorites, with clear ingredients and the little details that make them worth sharing.</p>
-          <a class="hero-link" href="#recipes">Explore the recipes <span aria-hidden="true">&rarr;</span></a>
-        </div>
+      <img class="hero-food hero-food-left" src="assets/img/pancit.jpg" alt="A colorful Filipino noodle dish" />
+      <img class="hero-food hero-food-right" src="assets/img/karekare.jpg" alt="A traditional Filipino stew" />
+      <div class="hero-copy">
+        <p class="eyebrow">A collection from the home kitchen</p>
+        <h1>Explore Recipes</h1>
+        <p>Good food, made slowly and shared generously.</p>
       </div>
     </header>
 
-    <main class="container recipe-section" id="recipes">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">The collection</p>
-          <h2>Find your next favorite</h2>
+    <main class="content-wrap" id="recipes">
+      <div class="catalog-toolbar">
+        <div class="category-list" aria-label="Recipe categories">
+          <span class="category-pill">All recipes</span>
+          <span class="category-pill">Main dishes</span>
+          <span class="category-pill">Soups</span>
+          <span class="category-pill">Noodles</span>
+          <span class="category-pill">Desserts</span>
         </div>
-        <p class="section-note">From slow-simmered classics to something sweet.</p>
-      </div>
-      <div class="toolbar">
-        <div class="d-flex flex-wrap gap-2" id="filters"></div>
-        <input
-          type="search"
-          id="search"
-          class="form-control search-box"
-          placeholder="Search recipes"
-          aria-label="Search recipes"
-        />
+        <span class="country-pill"><span aria-hidden="true">⌖</span> Philippines</span>
       </div>
 
-      <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 recipe-grid" id="parent"></div>
-      <p class="text-center text-muted d-none py-5" id="emptyState">
-        No recipes match your search. Try a different name or category.
-      </p>
+      <p class="catalog-count">A little something for every table <strong>· 6 recipes</strong></p>
+
+      <div class="catalog-layout">
+        <section class="recipe-grid" aria-label="Filipino recipes">
+          <article class="recipe-card">
+            <img src="assets/img/Adobo.jpg" alt="Chicken adobo with garlic and bay leaves" loading="lazy" />
+            <div class="recipe-body">
+              <span class="recipe-category">MAIN DISH · EASY</span>
+              <h2>Chicken Adobo</h2>
+              <p class="recipe-summary">Tender chicken simmered in a savory, tangy soy-vinegar sauce.</p>
+              <div class="recipe-meta"><span>◷ 45 min</span><span>♧ Serves 4</span></div>
+              <h3>You'll need</h3>
+              <p class="ingredients">1 kg chicken thighs, 1/2 cup soy sauce, 1/3 cup vinegar, 1 head crushed garlic, 3 bay leaves, 1 tsp whole peppercorns</p>
+              <p class="method">Marinate the chicken in soy sauce and garlic for 30 minutes. Simmer with vinegar, bay leaves, and peppercorns until tender, then reduce the sauce.</p>
+            </div>
+          </article>
+
+          <article class="recipe-card">
+            <img src="assets/img/sinigang.jpg" alt="Sinigang na baboy with vegetables" loading="lazy" />
+            <div class="recipe-body">
+              <span class="recipe-category">SOUP · MEDIUM</span>
+              <h2>Sinigang na Baboy</h2>
+              <p class="recipe-summary">Pork ribs and vegetables in a bright, comforting sour broth.</p>
+              <div class="recipe-meta"><span>◷ 70 min</span><span>♧ Serves 5</span></div>
+              <h3>You'll need</h3>
+              <p class="ingredients">1 kg pork ribs, 1 pack sinigang mix or fresh tamarind, 2 tomatoes, 1 onion, 1 radish (labanos), 1 bunch kangkong, fish sauce to taste</p>
+              <p class="method">Boil pork with onion and tomatoes until tender. Add the sour base and radish, then the greens. Season with fish sauce.</p>
+            </div>
+          </article>
+
+          <article class="recipe-card">
+            <img src="assets/img/karekare.jpg" alt="Kare-kare with vegetables and rich peanut sauce" loading="lazy" />
+            <div class="recipe-body">
+              <span class="recipe-category">MAIN DISH · SLOW COOK</span>
+              <h2>Kare-Kare</h2>
+              <p class="recipe-summary">A rich peanut stew with tender beef and garden vegetables.</p>
+              <div class="recipe-meta"><span>◷ 2 hr 30 min</span><span>♧ Serves 6</span></div>
+              <h3>You'll need</h3>
+              <p class="ingredients">1 kg oxtail or beef shank, 1/2 cup peanut butter, 1/4 cup ground toasted rice, 1 eggplant, 1 bunch bok choy, string beans, bagoong (shrimp paste) for serving</p>
+              <p class="method">Boil the beef until very tender. Stir in peanut butter and ground rice to thicken the broth. Add vegetables and serve with bagoong.</p>
+            </div>
+          </article>
+
+          <article class="recipe-card">
+            <img src="assets/img/pancit.jpg" alt="Pancit canton noodles with chicken and vegetables" loading="lazy" />
+            <div class="recipe-body">
+              <span class="recipe-category">NOODLES · EASY</span>
+              <h2>Pancit Canton</h2>
+              <p class="recipe-summary">A quick, colorful noodle stir-fry for family gatherings.</p>
+              <div class="recipe-meta"><span>◷ 30 min</span><span>♧ Serves 4</span></div>
+              <h3>You'll need</h3>
+              <p class="ingredients">250 g pancit canton noodles, 200 g sliced chicken, 1 thinly sliced carrot, 1 cup cabbage, 3 tbsp soy sauce, 1 tbsp oyster sauce, calamansi for serving</p>
+              <p class="method">Saute garlic, onion, and chicken. Add vegetables, sauces, and a cup of broth. Toss in the noodles until they absorb the liquid.</p>
+            </div>
+          </article>
+
+          <article class="recipe-card">
+            <img src="assets/img/letche flan.jpg" alt="Leche flan with golden caramel" loading="lazy" />
+            <div class="recipe-body">
+              <span class="recipe-category">DESSERT · MEDIUM</span>
+              <h2>Leche Flan</h2>
+              <p class="recipe-summary">Silky steamed custard finished with a glossy caramel top.</p>
+              <div class="recipe-meta"><span>◷ 90 min</span><span>♧ Serves 8</span></div>
+              <h3>You'll need</h3>
+              <p class="ingredients">10 egg yolks, 1 can condensed milk, 1 can evaporated milk, 1 tsp vanilla, 3/4 cup sugar for caramel</p>
+              <p class="method">Caramelize the sugar in the mold. Mix the remaining ingredients, strain, pour in, and steam for 45 minutes. Chill before unmolding.</p>
+            </div>
+          </article>
+
+          <article class="recipe-card">
+            <img src="assets/img/HALOHALO.jpg" alt="Halo-halo topped with ube and leche flan" loading="lazy" />
+            <div class="recipe-body">
+              <span class="recipe-category">DESSERT · NO COOK</span>
+              <h2>Halo-Halo</h2>
+              <p class="recipe-summary">Shaved ice layered with sweet Filipino treats and creamy milk.</p>
+              <div class="recipe-meta"><span>◷ 20 min</span><span>♧ Serves 2</span></div>
+              <h3>You'll need</h3>
+              <p class="ingredients">2 cups shaved ice, sweet beans and nata de coco, sweetened banana (saba), 1 slice leche flan, ube halaya, evaporated milk</p>
+              <p class="method">Layer the sweet ingredients in a tall glass. Pack with shaved ice, pour evaporated milk, and top with ube and flan.</p>
+            </div>
+          </article>
+        </section>
+
+        <aside class="sidebar" aria-label="Recipe collections">
+          <section class="side-panel">
+            <div class="panel-heading"><h2>Readers' favorites</h2><span>THE CLASSICS</span></div>
+            <ol class="favorite-list">
+              <li><span class="favorite-number">01</span><span><strong>Chicken Adobo</strong><small>Comfort food, any day</small></span></li>
+              <li><span class="favorite-number">02</span><span><strong>Kare-Kare</strong><small>For a long Sunday lunch</small></span></li>
+              <li><span class="favorite-number">03</span><span><strong>Leche Flan</strong><small>A sweet finish</small></span></li>
+              <li><span class="favorite-number">04</span><span><strong>Sinigang na Baboy</strong><small>Warm and wonderfully sour</small></span></li>
+            </ol>
+          </section>
+          <section class="side-panel pantry-panel">
+            <div class="panel-heading"><h2>What sounds good?</h2><span>BY CATEGORY</span></div>
+            <ul class="category-links">
+              <li><span>Something hearty</span><small>2 recipes</small></li>
+              <li><span>A bowl of soup</span><small>1 recipe</small></li>
+              <li><span>Quick noodles</span><small>1 recipe</small></li>
+              <li><span>A little dessert</span><small>2 recipes</small></li>
+            </ul>
+          </section>
+          <p class="sidebar-note">Recipes for everyday cooking, passed around the table.</p>
+        </aside>
+      </div>
     </main>
 
-    <footer class="site-footer py-4">
-      <div class="container d-flex flex-wrap justify-content-between gap-2">
-        <span class="footer-brand">Lutong Bahay <span>·</span> Filipino recipes for the home kitchen</span>
-        <span>Made to be shared.</span>
-      </div>
-    </footer>
-
-    <script src="assets/js/main.js"></script>
+    <footer class="site-footer"><span>Lutong Bahay</span><span>Filipino recipes for the home kitchen</span><span>Made to be shared.</span></footer>
   </body>
 </html>
