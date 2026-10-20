@@ -18,6 +18,7 @@ body {
   color: var(--ink);
   font-family: "DM Sans", sans-serif;
   line-height: 1.6;
+  margin: 0;
 }
 
 h1, h2, h3, .navbar-brand { font-family: "Fraunces", Georgia, serif; }
@@ -814,14 +815,14 @@ body {
   .country-pill { font-size: 0.6rem; padding: 0.6rem 0.85rem; }
   .catalog-count { margin: 0.9rem 0 1rem; }
   .recipe-grid { gap: 0.8rem; grid-template-columns: 1fr; }
-  .recipe-card { display: grid; grid-template-columns: 38% minmax(0, 1fr); }
-  .recipe-card > img { height: 100%; min-height: 100%; }
-  .recipe-body { padding: 0.7rem; }
+  .recipe-card { display: block; }
+  .recipe-card > img { aspect-ratio: 16 / 10; height: auto; min-height: 0; }
+  .recipe-body { padding: 0.9rem; }
   .recipe-body h2 { font-size: 0.98rem; }
-  .recipe-summary { font-size: 0.66rem; min-height: 0; }
-  .recipe-meta { font-size: 0.61rem; gap: 0.55rem; }
-  .recipe-body h3 { margin-top: 0.5rem; }
-  .ingredients, .method { font-size: 0.62rem; }
+  .recipe-summary { font-size: 0.78rem; min-height: 0; }
+  .recipe-meta { font-size: 0.68rem; gap: 0.55rem; }
+  .recipe-body h3 { font-size: 0.68rem; margin-top: 0.65rem; }
+  .ingredients, .method { font-size: 0.75rem; }
   .sidebar { grid-template-columns: 1fr; }
   .sidebar-note { grid-column: auto; }
   .site-footer { align-items: flex-start; flex-direction: column; gap: 0.3rem; padding: 1rem; }
