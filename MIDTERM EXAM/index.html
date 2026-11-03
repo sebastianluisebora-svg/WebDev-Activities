@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zoogle | Wildlife Search</title>
+  <meta name="theme-color" content="#1f6b43">
+  <meta name="description" content="Search the animal kingdom with Zoogle, a wildlife field guide.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%81%3C/text%3E%3C/svg%3E">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+
+<body>
+  <header id="results-header" class="site-header results-header d-none">
+    <div class="site-header-inner results-header-inner">
+      <button class="home-nav-button" type="button" onclick="goHome()" aria-label="Zoogle home">Zoogle</button>
+       <a class="vnav-home" href="index.html">Home</a>
+      <form class="header-search" onsubmit="return submitSearch(event, 'q-results')">
+        <input id="q-results" type="search" placeholder="Search animals" autocomplete="off" enterkeyhint="search" aria-label="Search animals">
+        <button type="submit" aria-label="Search">⌕</button>
+      </form>
+    </div>
+  </header>
+
+ 
+  <div id="home">
+    <section class="home-view">
+      <div class="home-content">
+        <p class="eyebrow">A greener way to explore wildlife</p>
+        <h1 class="home-logo" aria-label="Zoogle"><span>Z</span>oogle</h1>
+        <form class="home-search" onsubmit="return submitSearch(event, 'q-home')">
+          <input id="q-home" type="search" placeholder="Find an animal, e.g. elephant" autocomplete="off" enterkeyhint="search" aria-label="Search animals">
+          <button type="submit" aria-label="Search">⌕</button>
+        </form>
+        
+        <button class="lucky-link" type="button" onclick="feelingLucky()">Surprise me with a species <span
+            aria-hidden="true">↗</span></button>
+      </div>
+    </section>
+
+    <div class="park-promo">
+      <span class="promo-kicker">The park journal</span>
+      <span class="promo-copy"><strong>NEW!</strong> Every species has a story. Start exploring today.</span>
+      <a href="#wildlife-categories">Choose your trail <span aria-hidden="true">↗</span></a>
+    </div>
+
+    <section class="wildlife-section" id="wildlife-categories">
+      <div class="wildlife-section-inner">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Make an encounter</p>
+            <h2>Browse by animal group</h2>
+          </div>
+          <p>Pick an animal group to browse, or search by name above.</p>
+        </div>
+        <div class="category-grid" id="group-grid"></div>
+        </div>
+    </section>
+  </div>
+
+  
+  <div id="results" class="d-none">
+    <section class="results-hero">
+      <div class="results-hero-inner">
+        <p class="eyebrow">Zoogle · Wildlife field guide</p>
+        <h1>Find your next encounter.</h1>
+      </div>
+    </section>
+    <main class="gallery-shell">
+      <nav class="filter-list" id="animal-filters" aria-label="Filter by animal group"></nav>
+      <div class="gallery-meta">
+        <p id="summary" aria-live="polite"></p>
+      </div>
+      <div id="parent" class="animal-gallery"></div>
+      <nav class="gallery-pagination" aria-label="Page navigation">
+        <button class="pagination-arrow" onclick="prev()">Previous</button>
+        <div class="page-numbers" id="pageNumbers" aria-label="Page numbers"></div>
+        <button class="pagination-arrow" onclick="next()">Next</button>
+      </nav>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+
+  <script src="assets/groups.js"></script>
+  <script>
+    
+    const API_KEY = 's22YJcFvvV0fngBJOpcx8dyVvevMqhY95dX2LwHX';
+    const API_URL = 'https://api.api-ninjas.com/v1/animals';
+
+    const luckyList = ['lion', 'fox', 'owl', 'frog', 'shark', 'gecko', 'eagle', 'tiger', 'bat', 'crab', 'turtle', 'whale', 'bee', 'wolf'];
+
+    function capitalizeFirstLetter(str) {
+      if (!str) return str;
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    var elPageNumbers = document.getElementById('pageNumbers');
+    var elParent = document.getElementById('parent');
+    var elHome = document.getElementById('home');
+    var elResults = document.getElementById('results');
+    var elSummary = document.getElementById('summary');
+    var activeFilter = 'all';
+
+    const urlParams = new URLSearchParams(window.location.search);
+    var query = urlParams.get('q') || '';
+    var page = urlParams.get('page') == null ? 1 : parseInt(urlParams.get('page'));
+    var browseKey = urlParams.get('group') || '';
+    activeFilter = urlParams.get('filter') || 'all';
+    if (browseKey && !GROUPS.some(g => g.key === browseKey)) browseKey = '';
+    if (activeFilter !== 'all' && activeFilter !== 'other' && !GROUPS.some(g => g.key === activeFilter)) activeFilter = 'all';
+    if (browseKey) activeFilter = browseKey;
+
+    function buildFilters() {
+      const chips = [{ key: 'all', label: 'All' }].concat(GROUPS.map(g => ({ key: g.key, label: g.label })), [{ key: 'other', label: 'Other' }]);
+      document.getElementById('animal-filters').innerHTML = chips.map(c =>
+        '<button class="filter-chip" type="button" data-filter="' + c.key + '" onclick="setFilter(\'' + c.key + '\')">' + esc(c.label) + '</button>').join('');
+    }
+    function buildGroupCards() {
+      document.getElementById('group-grid').innerHTML = GROUPS.map(g =>
+        '<a class="category-card" data-animal-name="' + esc(g.rep) + '" href="?group=' + g.key + '" onclick="return openGroup(event, \'' + g.key + '\')">' +
+          '<div class="category-image" style="--group-color: ' + g.color + ';"><span class="category-emoji" aria-hidden="true">' + g.emoji + '</span></div>' +
+          '<div class="category-caption"><h3>' + esc(g.label) + '</h3><span>' + esc(g.blurb) + ' <b aria-hidden="true">↗</b></span></div>' +
+        '</a>').join('');
+    }
+    function syncChips() {
+      document.querySelectorAll('.filter-chip').forEach(item => item.classList.toggle('active', item.dataset.filter === activeFilter));
+    }
+    buildFilters();
+    buildGroupCards();
+    syncChips();
+    var animals = [];
+    const imageCache = new Map();
+
+    
+    var perPage = 12;
+    var finalPage = 1;
+
+    function updateUrl() {
+      const p = new URLSearchParams();
+      if (query) {
+        p.set('q', query);
+        p.set('page', page);
+        if (activeFilter !== 'all') p.set('filter', activeFilter);
+      } else if (browseKey) {
+        p.set('group', browseKey);
+        p.set('page', page);
+      }
+      history.replaceState(null, '', p.toString() ? '?' + p.toString() : window.location.pathname);
+    }
+
+    
+    const canAutoFocus = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    function focusHomeSearch() { if (canAutoFocus) document.getElementById('q-home').focus(); }
+
+    function quickSearch(term) {
+      document.getElementById('q-home').value = term;
+      submitSearch({ preventDefault() {} }, 'q-home');
+    }
+
+    function goHome() {
+      query = ''; browseKey = ''; animals = []; page = 1;
+      activeFilter = 'all';
+      syncChips();
+      updateUrl();
+      elResults.classList.add('d-none');
+      elHome.classList.remove('d-none');
+      document.getElementById('q-home').value = '';
+      document.getElementById('q-results').value = '';
+      document.getElementById('results-header').classList.add('d-none');
+      window.scrollTo(0, 0);
+      focusHomeSearch();
+    }
+
+    function showExplore(event) {
+      if (event) event.preventDefault();
+      if (query) {
+        elHome.classList.add('d-none');
+        elResults.classList.remove('d-none');
+        document.getElementById('animal-filters').scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        focusHomeSearch();
+      }
+    }
+
+    function showSpecies(event) {
+      if (event) event.preventDefault();
+      if (query) {
+        showExplore(event);
+      } else {
+        document.getElementById('wildlife-categories').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function setFilter(filter) {
+      if (!query && filter === 'all') { goHome(); return; }
+      if (!query && filter !== 'other') { browseGroup(filter); return; }
+      activeFilter = filter;
+      page = 1;
+      syncChips();
+      render();
+    }
+
+    function openGroup(event, key) {
+      event.preventDefault();
+      browseGroup(key);
+      return false;
+    }
+
+    function showResultsView() {
+      elHome.classList.add('d-none');
+      elResults.classList.remove('d-none');
+      document.getElementById('results-header').classList.remove('d-none');
+      window.scrollTo(0, 0);
+    }
+
+    async function browseGroup(key) {
+      const group = GROUPS.find(g => g.key === key);
+      if (!group) return;
+      browseKey = key; query = ''; activeFilter = key; page = 1;
+      showResultsView();
+      syncChips();
+      document.getElementById('q-home').value = '';
+      document.getElementById('q-results').value = '';
+      elParent.innerHTML = '<div class="gallery-message text-center py-5"><div class="spinner-border text-success" role="status"></div></div>';
+      elSummary.textContent = '';
+      elPageNumbers.innerHTML = '';
+
+      const settled = await Promise.allSettled(group.seeds.map(seed =>
+        fetch(API_URL + '?name=' + encodeURIComponent(seed), { headers: { 'X-Api-Key': API_KEY } })
+          .then(r => { if (!r.ok) throw new Error('The API returned an error (' + r.status + ').'); return r.json(); })));
+      if (browseKey !== key) return; // someone clicked another group meanwhile
+
+      const seen = new Set();
+      animals = [];
+      settled.forEach(result => {
+        if (result.status !== 'fulfilled') return;
+        result.value.forEach(a => {
+          const cls = ((a.taxonomy && a.taxonomy.class) || '').toLowerCase();
+          const id = a.name.toLowerCase();
+          if (group.classes.includes(cls) && !seen.has(id)) { seen.add(id); animals.push(a); }
+        });
+      });
+      animals.sort((a, b) => a.name.localeCompare(b.name));
+
+      if (!animals.length && settled.every(r => r.status === 'rejected')) {
+        elParent.innerHTML = '<div class="gallery-message"><div class="alert alert-danger my-3">' + esc(settled[0].reason.message) + '</div></div>';
+        return;
+      }
+      render();
+    }
+
+    async function loadAnimalImage(card, name) {
+      const key = name.toLowerCase();
+      if (!imageCache.has(key)) {
+        imageCache.set(key, fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(name.replace(/ /g, '_')))
+          .then(response => response.ok ? response.json() : null)
+          .then(data => data && data.thumbnail ? data.thumbnail.source : null)
+          .catch(() => null));
+      }
+      const imageUrl = await imageCache.get(key);
+      if (!imageUrl || !card.isConnected) return;
+
+      const image = new Image();
+      image.className = 'animal-photo';
+      image.alt = '';
+      const art = card.querySelector('.animal-art, .category-image');
+      if (!art) return;
+      image.onload = () => art.classList.add('has-photo');
+      image.onerror = () => image.remove();
+      image.src = imageUrl;
+      art.prepend(image);
+    }
+
+    function submitSearch(e, inputId) {
+      e.preventDefault();
+      const value = document.getElementById(inputId).value.trim();
+      if (!value) return false;
+      query = value;
+      browseKey = '';
+      page = 1;
+      activeFilter = 'all';
+      syncChips();
+      search();
+      return false;
+    }
+
+    function feelingLucky() {
+      query = luckyList[Math.floor(Math.random() * luckyList.length)];
+      browseKey = '';
+      page = 1;
+      activeFilter = 'all';
+      syncChips();
+      search(true);
+    }
+
+    const search = async (openFirst) => {
+      browseKey = '';
+      showResultsView();
+      syncChips();
+      document.getElementById('q-home').value = query;
+      document.getElementById('q-results').value = query;
+      elParent.innerHTML = '<div class="gallery-message text-center py-5"><div class="spinner-border text-success" role="status"></div></div>';
+      elSummary.textContent = '';
+
+      try {
+        const response = await fetch(API_URL + '?name=' + encodeURIComponent(query), { headers: { 'X-Api-Key': API_KEY } });
+        if (!response.ok) {
+          throw new Error(response.status === 400 || response.status === 401 || response.status === 403
+            ? 'The API key is missing or invalid. Add your key to API_KEY in the script.'
+            : 'The API returned an error (' + response.status + ').');
+        }
+        animals = await response.json();
+      } catch (err) {
+        animals = [];
+        elParent.innerHTML = '<div class="gallery-message"><div class="alert alert-danger my-3">' + esc(err.message) + '</div></div>';
+        elPageNumbers.innerHTML = '';
+        return;
+      }
+
+      finalPage = Math.max(1, Math.ceil(animals.length / perPage));
+      if (page > finalPage || page < 1) page = 1;
+      render();
+      if (openFirst && animals.length) window.location.href = detailUrl(animals[0].name, 1);
+    };
+
+    const render = () => {
+      elParent.innerHTML = '';
+
+      const filteredAnimals = animals.filter(animal => {
+        if (activeFilter === 'all') return true;
+        const cls = ((animal.taxonomy && animal.taxonomy.class) || '').toLowerCase();
+        const group = groupOfClass(cls);
+        return activeFilter === 'other' ? !group : !!group && group.key === activeFilter;
+      });
+      finalPage = Math.max(1, Math.ceil(filteredAnimals.length / perPage));
+      if (page > finalPage) page = finalPage;
+      updateUrl();
+      renderPageNumbers();
+
+      if (filteredAnimals.length === 0) {
+        elSummary.textContent = '';
+        elParent.innerHTML = '<p class="empty-state">No animals found in this group. Try another filter or search a different name.</p>';
+        return;
+      }
+
+      elSummary.textContent = filteredAnimals.length.toLocaleString() + ' species' + (query ? ' matching “' + query + '”' : browseKey ? ' in ' + (GROUPS.find(g => g.key === browseKey) || {}).label : ' to discover');
+
+      const start = (page - 1) * perPage;
+      const slice = filteredAnimals.slice(start, start + perPage);
+
+      slice.forEach((animal, i) => {
+        const index = start + i;
+        const cls = ((animal.taxonomy && animal.taxonomy.class) || '').toLowerCase();
+        const color = colors[cls] || colors.default;
+        const emoji = emojis[cls] || emojis.default;
+        const sci = animal.taxonomy && animal.taxonomy.scientific_name ? animal.taxonomy.scientific_name : '';
+        const where = animal.locations && animal.locations.length ? animal.locations.slice(0, 3).join(', ') : '';
+
+        elParent.innerHTML += `
+          <article class="animal-card" data-animal-name="` + esc(animal.name) + `">
+            <a class="animal-link" href="` + detailUrl(animal.name, page) + `">
+              <div class="animal-art" style="--animal-color: ` + color + `;" aria-hidden="true">
+                <span class="animal-emoji">` + emoji + `</span>
+                <span class="animal-art-label">` + esc(classLabel(cls)) + `</span>
+              </div>
+              <div class="animal-caption">
+                <h2>` + esc(capitalizeFirstLetter(animal.name)) + `</h2>
+                <p class="animal-scientific">` + esc(sci) + `</p>
+                <p class="animal-location">` + esc(where) + `</p>
+              </div>
+            </a>
+          </article>
+        `;
+      });
+      elParent.querySelectorAll('.animal-card').forEach(card => loadAnimalImage(card, card.dataset.animalName));
+    };
+
+    document.querySelectorAll('.category-card').forEach(card => loadAnimalImage(card, card.dataset.animalName));
+
+    function detailUrl(name, p) {
+      const params = new URLSearchParams({ name, page: p });
+      if (query) {
+        params.set('q', query);
+        if (activeFilter !== 'all') params.set('filter', activeFilter);
+      } else if (browseKey) {
+        params.set('group', browseKey);
+      }
+      return 'view.html?' + params.toString();
+    }
+
+    function renderPageNumbers() {
+      const visibleCount = Math.min(finalPage, 5);
+      const firstPage = Math.max(1, Math.min(page - 2, finalPage - visibleCount + 1));
+      elPageNumbers.innerHTML = Array.from({ length: visibleCount }, (_, index) => {
+        const pageNumber = firstPage + index;
+        const current = pageNumber === page;
+        return '<button class="page-number' + (current ? ' active' : '') + '" type="button" aria-label="Page ' + pageNumber + '"' +
+          (current ? ' aria-current="page"' : '') + ' onclick="goToPage(' + pageNumber + ')">' + pageNumber + '</button>';
+      }).join('');
+    }
+
+    function goToPage(pageNumber) {
+      page = pageNumber;
+      render();
+      window.scrollTo(0, 0);
+    }
+
+  
+    function prev() {
+      page -= 1;
+      if (page == 0) page = finalPage;
+      render();
+      window.scrollTo(0, 0);
+    }
+
+    function next() {
+      page += 1;
+      if (page > finalPage) page = 1;
+      render();
+      window.scrollTo(0, 0);
+    }
+
+  
+    if (query) search();
+    else if (browseKey) browseGroup(browseKey);
+  </script>
+</body>
+
+</html>
